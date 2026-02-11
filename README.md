@@ -73,25 +73,27 @@ Persistence: in-memory singleton or local JSON seed. No database.
 
 ## Getting Started
 
-Clone the repository:
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-git clone https://github.com/your-username/forms-app.git\
-cd forms-app
+## Getting Started
 
-Install dependencies:
+First, run the development server:
 
-npm install
-
-Run development server:
-
+```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-Open:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-http://localhost:3000
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<img width="2224" height="1077" alt="image" src="https://github.com/user-attachments/assets/cd982219-dff1-4686-905b-a627e651a710" />
+<img width="2272" height="1146" alt="image" src="https://github.com/user-attachments/assets/d289bb05-a84c-4e39-8077-e231da82b0da" />
+<img width="2247" height="1213" alt="image" src="https://github.com/user-attachments/assets/6300098c-2102-4718-95dd-449231302311" />
 
-Production build:
-
-npm run build\
-npm start
 
