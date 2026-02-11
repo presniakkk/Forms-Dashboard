@@ -22,8 +22,12 @@ interface FormsPageProps {
   searchParams: Promise<{ status?: string }>;
 }
 
-export default async function FormsPage({ searchParams }: FormsPageProps) {
-  const { status } = await searchParams;
+export default async function FormsPage(props: FormsPageProps) {
+  // Await searchParams
+  const searchParams = await props.searchParams;
+  const status = searchParams.status;
+  
+  // Await cookies
   const cookieStore = await cookies();
   const role = cookieStore.get('role')?.value;
   const isAdmin = role === 'admin';
