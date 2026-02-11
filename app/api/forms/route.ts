@@ -3,6 +3,9 @@ import { formService } from '@/lib/services/form.service';
 import { ZodError } from 'zod';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET() {
   const forms = await formService.getAll();
   return NextResponse.json(forms);
@@ -32,3 +35,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
+
