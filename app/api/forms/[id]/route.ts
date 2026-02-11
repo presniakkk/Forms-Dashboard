@@ -3,6 +3,9 @@ import { formService } from '@/lib/services/form.service';
 import { ZodError } from 'zod';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
@@ -71,3 +74,4 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
+
