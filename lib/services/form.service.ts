@@ -1,27 +1,42 @@
 import { formInputSchema } from '@/lib/schemas/form.schema';
-import { formRepository } from '@/lib/repositories/memory.form.repository';
+import { Form, FormInput } from '@/lib/types/form.types';
+import { seedForms } from '@/lib/data/seed';
 
 class FormService {
-  async getAll() {
-    return formRepository.getAll();
+  async getAll(): Promise<Form[]> {
+    return [...seedForms];
   }
 
-  async getById(id: string) {
-    return formRepository.getById(id);
+  async getById(id: string): Promise<Form | null> {
+    return seedForms.find((f) => f.id === id) ?? null;
   }
 
-  async create(data: unknown) {
+  async create(data: unknown): Promise<Form> {
     const parsed = formInputSchema.parse(data);
-    return formRepository.create(parsed);
+    const now = new Date().toISOString();
+    const form: Form = {
+      id: String(Date.now()),
+      ...parsed,
+      createdAt: now,
+      updatedAt: now,
+    };
+    return form;
   }
 
-  async update(id: string, data: unknown) {
+  async update(id: string, data: unknown): Promise<Form | null> {
     const parsed = formInputSchema.parse(data);
-    return formRepository.update(id, parsed);
+    const form = seedForms.find((f) => f.id === id);
+    if (!form) return null;
+    
+    return {
+      ...form,
+      ...parsed,
+      updatedAt: new Date().toISOString(),
+    };
   }
 
-  async delete(id: string) {
-    return formRepository.delete(id);
+  async delete(id: string): Promise<boolean> {
+    return seedForms.some((f) => f.id === id);
   }
 }
 
