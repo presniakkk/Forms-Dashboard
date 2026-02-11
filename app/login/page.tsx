@@ -8,6 +8,8 @@ import { useAuthStore } from '@/lib/store/auth.store';
 import { useToastStore } from '@/lib/store/toast.store';
 import { setCookie } from '@/lib/helpers/cookies';
 
+export const dynamic = 'force-dynamic'
+
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -98,4 +100,5 @@ export default function LoginPage() {
       </div>
     </main>
   );
+
 }
