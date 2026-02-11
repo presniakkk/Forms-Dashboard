@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { formService } from '@/lib/services/form.service';
 import { ZodError } from 'zod';
+import { revalidatePath } from 'next/cache';
 
 export async function GET() {
   const forms = await formService.getAll();
@@ -17,6 +18,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const form = await formService.create(body);
+    
+    revalidatePath('/forms');
+    
     return NextResponse.json(form, { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {
