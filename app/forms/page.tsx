@@ -1,38 +1,24 @@
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { Form, FormStatus, FormListItem } from '@/lib/types/form.types';
+import { FormStatus, FormListItem } from '@/lib/types/form.types';
 import { StatusFilter } from '@/components/forms/StatusFilter';
 import { FormTable } from '@/components/forms/FormTable';
 import { byStatus, sortByDate } from '@/lib/filters/form.filters';
-
-async function getForms(): Promise<Form[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/forms`, {
-    cache: 'no-store',
-  });
-
-  if (!res.ok) {
-    throw new Error('Failed to load forms');
-  }
-
-  return res.json();
-}
+import { formService } from '@/lib/services/form.service';
 
 interface FormsPageProps {
   searchParams: Promise<{ status?: string }>;
 }
 
 export default async function FormsPage(props: FormsPageProps) {
-  // Await searchParams
   const searchParams = await props.searchParams;
   const status = searchParams.status;
   
-  // Await cookies
   const cookieStore = await cookies();
   const role = cookieStore.get('role')?.value;
   const isAdmin = role === 'admin';
 
-  let forms = await getForms();
+  let forms = await formService.getAll();
 
   if (status && ['draft', 'active', 'archived'].includes(status)) {
     forms = byStatus(status as FormStatus)(forms);
