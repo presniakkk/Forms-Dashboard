@@ -1,6 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -9,7 +8,7 @@ import { useAuthStore } from '@/lib/store/auth.store';
 import { useToastStore } from '@/lib/store/toast.store';
 import { setCookie } from '@/lib/helpers/cookies';
 
-function LoginForm() {
+export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
