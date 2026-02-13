@@ -2,6 +2,9 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { FormTable } from '@/components/forms/FormTable';
 import { Button } from '@/components/ui/Button';
+import { FormListItem } from '@/lib/types/form.types';
+import { formService } from '@/lib/services/form.service';
+import { sortByDate } from '@/lib/filters/form.filters';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +16,17 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
+  const isAdmin = role === 'admin';
+  let forms = await formService.getAll();
+  forms = sortByDate('desc')(forms);
+
+  const listItems: FormListItem[] = forms.map(({ id, title, status, updatedAt }) => ({
+    id,
+    title,
+    status,
+    updatedAt,
+  }));
+
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -23,7 +37,7 @@ export default async function DashboardPage() {
               Welcome back! Manage your forms from here.
             </p>
           </div>
-          {role === 'admin' && (
+          {isAdmin && (
             <Button href="/forms/new">Create New Form</Button>
           )}
         </div>
@@ -32,7 +46,7 @@ export default async function DashboardPage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             Recent Forms
           </h2>
-          <FormTable />
+          <FormTable forms={listItems} isAdmin={isAdmin} />
         </div>
       </div>
     </main>
