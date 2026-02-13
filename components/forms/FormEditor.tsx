@@ -60,6 +60,7 @@ export function FormEditor({ defaultValues, formId }: FormEditorProps) {
         isEdit ? 'Form updated successfully' : 'Form created successfully',
         'success'
       );
+      router.refresh();
       router.push('/forms');
     } catch (error) {
       addToast(
@@ -80,6 +81,7 @@ export function FormEditor({ defaultValues, formId }: FormEditorProps) {
       }
 
       addToast('Form deleted', 'success');
+      router.refresh();
       router.push('/forms');
     } catch {
       addToast('Failed to delete form', 'error');
