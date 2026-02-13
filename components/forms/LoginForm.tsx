@@ -28,6 +28,7 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginSchema) => {
     setCookie('role', data.role);
+    setCookie('email', data.email);
     login(data.email, data.role);
     addToast(`Welcome! Logged in as ${data.role}`, 'success');
 

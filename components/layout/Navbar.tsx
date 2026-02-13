@@ -15,6 +15,7 @@ export function Navbar() {
 
   const handleLogout = () => {
     deleteCookie('role');
+    deleteCookie('email');
     logout();
     addToast('Logged out', 'info');
     router.push('/');

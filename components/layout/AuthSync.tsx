@@ -19,9 +19,13 @@ export function AuthSync() {
     const email = getCookie('email');
     
     if (role === 'admin' || role === 'individual') {
-      // Use stored email from cookie if available, otherwise use placeholder
-      // This is a demo app, so we don't persist email by default
-      login(email || 'user@session.local', role);
+      // Use stored email from cookie - it should be set during login
+      if (email) {
+        login(email, role);
+      } else {
+        // Fallback for old sessions without email cookie
+        login('user@session.local', role);
+      }
     }
   }, [isLoggedIn, login]);
 

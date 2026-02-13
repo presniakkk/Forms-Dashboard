@@ -47,13 +47,14 @@ class MemoryFormRepository implements IFormRepository {
   }
 }
 
+// Use globalThis to persist across serverless function invocations
 const globalForForms = globalThis as unknown as {
   formRepository: MemoryFormRepository;
 };
 
-export const formRepository =
-  globalForForms.formRepository ?? new MemoryFormRepository();
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForForms.formRepository = formRepository;
+// Initialize singleton - works in both dev and production (Vercel)
+if (!globalForForms.formRepository) {
+  globalForForms.formRepository = new MemoryFormRepository();
 }
+
+export const formRepository = globalForForms.formRepository;
