@@ -1,6 +1,8 @@
 export function setCookie(name: string, value: string, days: number = 7) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
-  document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+  // Encode value to handle special characters
+  const encodedValue = encodeURIComponent(value);
+  document.cookie = `${name}=${encodedValue}; expires=${expires}; path=/; SameSite=Lax`;
 }
 
 export function deleteCookie(name: string) {

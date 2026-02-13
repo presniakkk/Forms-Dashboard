@@ -48,12 +48,14 @@ export function FormEditor({ defaultValues, formId }: FormEditorProps) {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
 
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error || 'Something went wrong');
+        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        const errorMessage = errorData.error || errorData.message || `HTTP ${res.status}: ${res.statusText}`;
+        throw new Error(errorMessage);
       }
 
       addToast(
@@ -74,17 +76,25 @@ export function FormEditor({ defaultValues, formId }: FormEditorProps) {
     if (!confirm('Are you sure you want to delete this form?')) return;
 
     try {
-      const res = await fetch(`/api/forms/${formId}`, { method: 'DELETE' });
+      const res = await fetch(`/api/forms/${formId}`, { 
+        method: 'DELETE',
+        credentials: 'include',
+      });
 
       if (!res.ok) {
-        throw new Error('Failed to delete');
+        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        const errorMessage = errorData.error || errorData.message || `HTTP ${res.status}: ${res.statusText}`;
+        throw new Error(errorMessage);
       }
 
       addToast('Form deleted', 'success');
       router.refresh();
       router.push('/forms');
-    } catch {
-      addToast('Failed to delete form', 'error');
+    } catch (error) {
+      addToast(
+        error instanceof Error ? error.message : 'Failed to delete form',
+        'error'
+      );
     }
   };
 
