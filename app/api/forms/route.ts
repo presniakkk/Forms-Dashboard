@@ -22,7 +22,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const form = await formService.create(body);
     
+    // Revalidate pages that depend on forms data
     revalidatePath('/forms');
+    revalidatePath('/dashboard');
     
     return NextResponse.json(form, { status: 201 });
   } catch (error) {
@@ -32,7 +34,11 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('Error creating form:', error);
+    return NextResponse.json(
+      { error: 'Server error', message: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
   }
 }
 

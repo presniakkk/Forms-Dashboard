@@ -3,11 +3,17 @@ import { IFormRepository } from './form.repository.interface';
 import { seedForms } from '@/lib/data/seed';
 
 class MemoryFormRepository implements IFormRepository {
-  private forms: Form[] = [...seedForms];
-  private nextId: number = 4;
+  private forms: Form[];
+  private nextId: number;
+
+  constructor() {
+    // Always start with seed data
+    this.forms = [...seedForms];
+    this.nextId = seedForms.length + 1;
+  }
 
   async getAll(): Promise<Form[]> {
-    return this.forms;
+    return [...this.forms];
   }
 
   async getById(id: string): Promise<Form | null> {
@@ -47,14 +53,17 @@ class MemoryFormRepository implements IFormRepository {
   }
 }
 
-// Use globalThis to persist across serverless function invocations
+// Use globalThis to persist across serverless function invocations on Vercel
+// This ensures data persists within the same runtime instance
 const globalForForms = globalThis as unknown as {
   formRepository: MemoryFormRepository;
+  formRepositoryInitialized: boolean;
 };
 
 // Initialize singleton - works in both dev and production (Vercel)
-if (!globalForForms.formRepository) {
+if (!globalForForms.formRepository || !globalForForms.formRepositoryInitialized) {
   globalForForms.formRepository = new MemoryFormRepository();
+  globalForForms.formRepositoryInitialized = true;
 }
 
 export const formRepository = globalForForms.formRepository;

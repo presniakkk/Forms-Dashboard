@@ -10,19 +10,21 @@ function getCookie(name: string): string | null {
 }
 
 export function AuthSync() {
-  const { isLoggedIn, login } = useAuthStore();
+  const { isLoggedIn, login, email } = useAuthStore();
 
   useEffect(() => {
+    // Only sync if not already logged in
     if (isLoggedIn) return;
 
     const role = getCookie('role');
-    const email = getCookie('email');
+    const emailFromCookie = getCookie('email');
     
     if (role === 'admin' || role === 'individual') {
-      // Always use email from cookie if available, otherwise use placeholder
-      login(email || 'user@session.local', role);
+      // Use email from cookie, fallback to placeholder only if cookie doesn't exist
+      const emailToUse = emailFromCookie || 'user@session.local';
+      login(emailToUse, role);
     }
-  }, [isLoggedIn, login]);
+  }, [isLoggedIn, login, email]);
 
   return null;
 }

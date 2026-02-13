@@ -37,8 +37,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Form not found' }, { status: 404 });
     }
 
+    // Revalidate all related pages
     revalidatePath('/forms');
     revalidatePath(`/forms/${id}`);
+    revalidatePath('/dashboard');
 
     return NextResponse.json(form);
   } catch (error) {
@@ -48,7 +50,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         { status: 400 }
       );
     }
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('Error updating form:', error);
+    return NextResponse.json(
+      { error: 'Server error', message: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -67,11 +73,18 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Form not found' }, { status: 404 });
     }
 
+    // Revalidate all related pages
     revalidatePath('/forms');
+    revalidatePath(`/forms/${id}`);
+    revalidatePath('/dashboard');
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('Error deleting form:', error);
+    return NextResponse.json(
+      { error: 'Server error', message: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
   }
 }
 
